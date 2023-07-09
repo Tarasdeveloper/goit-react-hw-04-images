@@ -1,6 +1,6 @@
+import { useState } from 'react';
 import { ImSearch } from 'react-icons/im';
 import { toast } from 'react-toastify';
-import { Component } from 'react';
 import {
   SearchForm,
   SearchFormButton,
@@ -8,52 +8,45 @@ import {
   SearchbarContainer,
 } from './SearchBar.styled';
 
-export class Searchbar extends Component {
-  state = {
-    searchValue: '',
+export default function Searchbar({ onSubmit }) {
+  const [searchValue, setSearchValue] = useState('');
+
+  const handleSaveSearch = evt => {
+    setSearchValue(evt.currentTarget.value);
   };
 
-  hendleSaveSearch = evt => {
-    this.setState({ searchValue: evt.currentTarget.value });
-  };
-
-  hendelSubmit = evt => {
+  const handleSubmit = evt => {
     evt.preventDefault();
-    const { searchValue } = this.state;
 
     if (searchValue.trim() === '') {
       toast.error('Oopps, enter at least something');
       return;
     }
-    this.props.onSubmit(searchValue);
 
-    this.reset();
+    onSubmit(searchValue);
+    reset();
   };
 
-  reset() {
-    this.setState({ searchValue: '' });
-  }
+  const reset = () => {
+    setSearchValue('');
+  };
 
-  render() {
-    const { searchValue } = this.state;
-    return (
-      <SearchbarContainer>
-        <SearchForm onSubmit={this.hendelSubmit}>
-          <SearchFormButton type="submit">
-            <ImSearch />
-          </SearchFormButton>
-
-          <SearchFormInput
-            className="input"
-            type="text"
-            autocomplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-            value={searchValue}
-            onChange={this.hendleSaveSearch}
-          />
-        </SearchForm>
-      </SearchbarContainer>
-    );
-  }
+  return (
+    <SearchbarContainer>
+      <SearchForm onSubmit={handleSubmit}>
+        <SearchFormButton type="submit">
+          <ImSearch />
+        </SearchFormButton>
+        <SearchFormInput
+          className="input"
+          type="text"
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          value={searchValue}
+          onChange={handleSaveSearch}
+        />
+      </SearchForm>
+    </SearchbarContainer>
+  );
 }
